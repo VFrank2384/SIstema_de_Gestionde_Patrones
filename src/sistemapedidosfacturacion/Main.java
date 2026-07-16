@@ -1,6 +1,7 @@
 package sistemapedidosfacturacion;
 import sistemapedidosfacturacion.modelo.*;
 import sistemapedidosfacturacion.observer.*;
+import sistemapedidosfacturacion.abstractfactory.*;
 
 public class Main {
 	public static void main(String[] args) {
@@ -59,6 +60,45 @@ public class Main {
                 .agregarProducto(new Producto(4, "E-book Java", 25.0, false))
                 .build();
         gestor.cambiarEstadoPedido(pedido2, "PAGADO");
+        
+        // 3. DEMOSTRACIÓN DEL ABSTRACT FACTORY
+        System.out.println("\n--- PARTE 3: ABSTRACT FACTORY ---");
+
+        // FUNCIONALIDAD 1: Crear facturas para diferentes tipos de cliente
+        System.out.println("1. CREANDO FACTURAS:");
+        FacturaFactory factoryParticular = new FacturaFactoryParticular();
+        Factura facturaParticular = factoryParticular.crearFactura();
+        facturaParticular.generar();
+        System.out.println("   Tipo: " + facturaParticular.getTipo());
+
+        FacturaFactory factoryEmpresa = new FacturaFactoryEmpresa();
+        Factura facturaEmpresa = factoryEmpresa.crearFactura();
+        facturaEmpresa.generar();
+        System.out.println("   Tipo: " + facturaEmpresa.getTipo());
+
+        // FUNCIONALIDAD 2: Crear remitos asociados a esas facturas
+        System.out.println("\n2. CREANDO REMITOS ASOCIADOS:");
+        Remito remitoParticular = factoryParticular.crearRemito();
+        remitoParticular.generar();
+        System.out.println("   Tipo: " + remitoParticular.getTipo());
+
+        Remito remitoEmpresa = factoryEmpresa.crearRemito();
+        remitoEmpresa.generar();
+        System.out.println("   Tipo: " + remitoEmpresa.getTipo());
+
+        // Demostrar que cada fábrica crea una familia completa
+        System.out.println("\n3. FAMILIAS COMPLETAS:");
+        System.out.println("Cliente PARTICULAR → Factura + Remito:");
+        Factura f1 = factoryParticular.crearFactura();
+        Remito r1 = factoryParticular.crearRemito();
+        f1.generar();
+        r1.generar();
+
+        System.out.println("Cliente EMPRESA → Factura + Remito:");
+        Factura f2 = factoryEmpresa.crearFactura();
+        Remito r2 = factoryEmpresa.crearRemito();
+        f2.generar();
+        r2.generar();
 
         System.out.println("\n=== FIN DEMOSTRACIÓN ===");
     }
