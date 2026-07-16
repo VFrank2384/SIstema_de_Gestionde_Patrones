@@ -14,13 +14,17 @@ public class Pedido {
         this.estado = "CREADO";
     }
 
+    // ============ GETTERS ============
     public int getId() { return id; }
     public List<Producto> getProductos() { return new ArrayList<>(productos); }
     public double getDescuento() { return descuento; }
     public Direccion getDireccion() { return direccion; }
     public String getEstado() { return estado; }
 
-    public void setEstado(String estado) { this.estado = estado; } // Para Observer
+    // ============ SETTER PARA ESTADO (OBSERVER) ============
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public double calcularTotal() {
         double total = 0;
@@ -41,7 +45,6 @@ public class Pedido {
             this.pedido = new Pedido();
         }
 
-        // FUNCIONALIDAD 1: Construcción paso a paso
         public Builder id(int id) {
             pedido.id = id;
             return this;
@@ -63,7 +66,6 @@ public class Pedido {
             return this;
         }
 
-        // FUNCIONALIDAD 2: Validaciones al construir
         public Pedido build() {
             if (pedido.productos.isEmpty()) {
                 throw new IllegalStateException("ERROR: El pedido debe tener al menos un producto");

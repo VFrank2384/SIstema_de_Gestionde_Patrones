@@ -1,5 +1,6 @@
 package sistemapedidosfacturacion.observer;
+import sistemapedidosfacturacion.modelo.Pedido;
 
-public class Observador {
-
+public interface Observador {
+	void actualizar(Pedido pedido);
 }
