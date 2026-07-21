@@ -2,6 +2,7 @@ package sistemapedidosfacturacion;
 import sistemapedidosfacturacion.modelo.*;
 import sistemapedidosfacturacion.observer.*;
 import sistemapedidosfacturacion.abstractfactory.*;
+import sistemapedidosfacturacion.prototype.*;
 
 public class Main {
 	public static void main(String[] args) {
@@ -25,9 +26,8 @@ public class Main {
                 .build();
         System.out.println("Pedido creado: " + pedido);
 
-        // ============================================
+        
         // 2. DEMOSTRACIÓN DEL OBSERVER
-        // ============================================
         System.out.println("\n--- PARTE 2: OBSERVER ---");
 
         // Crear el gestor (sujeto)
@@ -99,7 +99,37 @@ public class Main {
         Remito r2 = factoryEmpresa.crearRemito();
         f2.generar();
         r2.generar();
+        
+        // 4. DEMOSTRACIÓN DEL PROTOTYPE
+        System.out.println("\n--- PARTE 4: PROTOTYPE ---");
 
+        // Crear productos
+        Producto tablet = new Producto(1, "Tablet Xiaomi Pad 6", 1200.0, true);
+        Producto audifonos = new Producto(2, "AirPods Pro 2", 45.0, true);
+
+        // Crear una plantilla de pedido
+        PlantillaPedido plantillaBase = new PlantillaPedido("Plantilla Cliente Frecuente");
+        plantillaBase.agregarProducto(tablet);
+        plantillaBase.agregarProducto(audifonos);
+
+        // Registrar plantilla en el catálogo
+        CatalogoPlantillas catalogo = new CatalogoPlantillas();
+        catalogo.registrarPlantilla("cliente_frecuente", plantillaBase);
+
+        // FUNCIONALIDAD 1: Clonar la plantilla
+        System.out.println("1. CLONANDO PLANTILLA:");
+        PlantillaPedido pedidoClonado = catalogo.obtenerClon("cliente_frecuente");
+        System.out.println("   Original: " + plantillaBase.getNombre());
+        System.out.println("   Clon: " + pedidoClonado.getNombre());
+
+        // FUNCIONALIDAD 2: Modificar el clon sin afectar al original
+        System.out.println("\n2. MODIFICANDO EL CLON:");
+        pedidoClonado.setNombre("Pedido Clonado - Con Descuento");
+        pedidoClonado.agregarProducto(new Producto(3, "Antivirus", 60.0, false));
+        System.out.println("   Original: " + plantillaBase.getNombre() + " (productos: " + plantillaBase.getProductos().size() + ")");
+        System.out.println("   Clon modificado: " + pedidoClonado.getNombre() + " (productos: " + pedidoClonado.getProductos().size() + ")");
+        System.out.println("   ✅ El clon se modificó sin afectar al original");
+        
         System.out.println("\n=== FIN DEMOSTRACIÓN ===");
     }
 }
