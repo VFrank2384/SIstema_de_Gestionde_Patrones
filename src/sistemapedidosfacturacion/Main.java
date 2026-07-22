@@ -1,8 +1,16 @@
 package sistemapedidosfacturacion;
 import sistemapedidosfacturacion.modelo.*;
+
 import sistemapedidosfacturacion.observer.*;
 import sistemapedidosfacturacion.abstractfactory.*;
 import sistemapedidosfacturacion.prototype.*;
+import sistemapedidosfacturacion.bridge.MetodoPago;
+import sistemapedidosfacturacion.bridge.PayPal;
+import sistemapedidosfacturacion.bridge.ProcesadorPago;
+import sistemapedidosfacturacion.bridge.ProcesadorRapido;
+import sistemapedidosfacturacion.bridge.ProcesadorSeguro;
+import sistemapedidosfacturacion.bridge.TarjetaCredito;
+import sistemapedidosfacturacion.modelo.Direccion;
 
 public class Main {
 	public static void main(String[] args) {
@@ -129,6 +137,50 @@ public class Main {
         System.out.println("   Original: " + plantillaBase.getNombre() + " (productos: " + plantillaBase.getProductos().size() + ")");
         System.out.println("   Clon modificado: " + pedidoClonado.getNombre() + " (productos: " + pedidoClonado.getProductos().size() + ")");
         System.out.println("   ✅ El clon se modificó sin afectar al original");
+        
+        // 5. DEMOSTRACION DE ADAPTER
+        System.out.println("\n--- PARTE 5: ADAPTER ---");
+        sistemapedidosfacturacion.adapter.ServicioExterno servicioExterno = 
+            new sistemapedidosfacturacion.adapter.ServicioExternoImpl();
+        sistemapedidosfacturacion.adapter.ServicioEnvio adaptador = 
+            new sistemapedidosfacturacion.adapter.EnvioAdapter(servicioExterno);
+
+        Direccion direccionEnvio = new Direccion("Calle Falsa 123", "Lima", "15001");
+        boolean envioExitoso = adaptador.enviar("PED-001", direccionEnvio);
+        System.out.println("✅ ¿Envío exitoso? " + envioExitoso);
+
+        double costo = adaptador.calcularCostoEnvio(2.0, "15001");
+        System.out.println("💰 Costo de envío calculado: S/ " + costo);
+        
+     
+        // 6. DEMOSTRACION DE BRIDGE
+        System.out.println("\n--- PARTE 6: BRIDGE ---");
+
+        // Crear dirección de envío para el pedido de demostración
+        Direccion direccionDemo = new Direccion("Av. Demo 456", "Ciudad Demo", "99999");
+
+        // 1. Crear un pedido de ejemplo para el pago
+        Pedido pedidoDemo = new Pedido.Builder()
+                .id(10)
+                .agregarProducto(new Producto(101, "Libro", 15.0, true))
+                .agregarProducto(new Producto(102, "Cuaderno", 5.0, false))
+                .direccion(direccionDemo)
+                .build();
+
+        // 2. Crear los procesadores (implementaciones de ProcesadorPago)
+        ProcesadorPago rapido = new ProcesadorRapido();
+        ProcesadorPago seguro = new ProcesadorSeguro();
+
+        // 3. Crear métodos de pago (abstracciones) asociándolos con un procesador
+        MetodoPago tarjeta = new TarjetaCredito(rapido, "Juan Pérez", "1234567890123456");
+        MetodoPago paypal = new PayPal(seguro, "juan@example.com");
+
+        // 4. Realizar pagos
+        System.out.println("\n--- PAGO CON TARJETA (procesador rápido) ---");
+        tarjeta.pagar(pedidoDemo);
+
+        System.out.println("\n--- PAGO CON PAYPAL (procesador seguro) ---");
+        paypal.pagar(pedidoDemo);
         
         System.out.println("\n=== FIN DEMOSTRACIÓN ===");
     }
