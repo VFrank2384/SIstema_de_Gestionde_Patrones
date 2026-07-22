@@ -14,7 +14,7 @@ public class Main {
         Producto laptop = new Producto(1, "Laptop Gamer", 1200.0, true);
         Producto mouse = new Producto(2, "Mouse Inalámbrico", 45.0, true);
         Producto software = new Producto(3, "Antivirus Premium", 60.0, false);
-        Direccion direccion = new Direccion("Av. Principal 123", "Ciudad de México");
+        Direccion direccion = new Direccion("Av. Principal 123", "Ciudad de México", "123456");
 
         Pedido pedido = new Pedido.Builder()
                 .id(1)

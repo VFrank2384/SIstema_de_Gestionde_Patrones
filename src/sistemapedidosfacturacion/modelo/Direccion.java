@@ -3,17 +3,21 @@ package sistemapedidosfacturacion.modelo;
 public class Direccion {
 	private String calle;
     private String ciudad;
+    private String codigoPostal; 
 
-    public Direccion(String calle, String ciudad) {
+    public Direccion(String calle, String ciudad, String codigoPostal) {
         this.calle = calle;
         this.ciudad = ciudad;
+        this.codigoPostal = codigoPostal;
     }
 
     public String getCalle() { return calle; }
     public String getCiudad() { return ciudad; }
+    public String getCodigoPostal() { return codigoPostal; }
+    public void setCodigoPostal(String codigoPostal) { this.codigoPostal = codigoPostal; }
 
     @Override
     public String toString() {
-        return calle + ", " + ciudad;
+        return calle + ", " + ciudad + ", CP: " + codigoPostal;
     }
 }
